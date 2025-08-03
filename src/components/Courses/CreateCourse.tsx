@@ -67,20 +67,23 @@ export function CreateCourse() {
   }
 
   if (profile?.role !== 'mentor' && profile?.role !== 'admin') {
-    return (
-      <div className="p-6">
-        <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-8 text-center">
-          <BookOpen className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">Mentor Access Required</h3>
-          <p className="text-gray-600 mb-4">
-            You need to be a mentor to create courses. Complete your first year or request mentor access.
-          </p>
-          <button className="bg-purple-500 text-white px-6 py-2 rounded-xl hover:bg-purple-600 transition-colors">
-            Request Mentor Access
-          </button>
+    // Allow 2nd year+ students to create courses
+    if (profile?.year_of_study < 2) {
+      return (
+        <div className="p-6">
+          <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-8 text-center">
+            <BookOpen className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">2nd Year+ Required</h3>
+            <p className="text-gray-600 mb-4">
+              You need to be in 2nd year or above to create courses and mentor juniors.
+            </p>
+            <button className="bg-purple-500 text-white px-6 py-2 rounded-xl hover:bg-purple-600 transition-colors">
+              Request Early Access
+            </button>
+          </div>
         </div>
-      </div>
-    )
+      )
+    }
   }
 
   return (

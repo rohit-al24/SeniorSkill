@@ -26,13 +26,15 @@ export function Sidebar({ activeView, onViewChange }: SidebarProps) {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Home, color: 'text-blue-600' },
     { id: 'courses', label: 'Explore Courses', icon: BookOpen, color: 'text-green-600' },
+    { id: 'community', label: 'Learning Community', icon: Users, color: 'text-indigo-600' },
     { id: 'my-courses', label: 'My Courses', icon: User, color: 'text-purple-600' },
+    { id: 'profile', label: 'Profile', icon: User, color: 'text-gray-600' },
     { id: 'achievements', label: 'Achievements', icon: Award, color: 'text-yellow-600' },
     { id: 'reviews', label: 'Reviews', icon: Star, color: 'text-orange-600' },
   ]
 
   // Add mentor-specific items
-  if (profile.role === 'mentor' || profile.role === 'admin') {
+  if (profile.role === 'mentor' || profile.role === 'admin' || profile.year_of_study >= 2) {
     menuItems.splice(3, 0, 
       { id: 'create-course', label: 'Create Course', icon: PlusCircle, color: 'text-indigo-600' },
       { id: 'my-students', label: 'My Students', icon: Users, color: 'text-teal-600' }

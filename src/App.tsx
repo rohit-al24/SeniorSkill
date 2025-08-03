@@ -6,6 +6,8 @@ import { Sidebar } from './components/Layout/Sidebar'
 import { Dashboard } from './components/Dashboard/Dashboard'
 import { CourseList } from './components/Courses/CourseList'
 import { CreateCourse } from './components/Courses/CreateCourse'
+import { UserProfile } from './components/Profile/UserProfile'
+import { LearningCommunity } from './components/Community/LearningCommunity'
 
 function AppContent() {
   const { user, profile, loading } = useAuthContext()
@@ -36,6 +38,10 @@ function AppContent() {
         return <CourseList />
       case 'create-course':
         return <CreateCourse />
+      case 'profile':
+        return <UserProfile />
+      case 'community':
+        return <LearningCommunity />
       case 'my-courses':
         return <div className="p-6">My Courses (Coming Soon)</div>
       case 'achievements':
