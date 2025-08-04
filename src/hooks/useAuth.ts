@@ -9,19 +9,36 @@ export function useAuth() {
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    let mounted = true
+    
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      if (!mounted) return
+      
+      if (error) {
+        console.error('Session error:', error)
+        setError('Failed to get session')
+        setLoading(false)
+        return
+      }
+      
       setUser(session?.user ?? null)
       if (session?.user) {
-        fetchProfile(session.user.id)
+        fetchProfile(session.user.id).finally(() => {
+          if (mounted) setLoading(false)
+        })
+      } else {
+        setLoading(false)
       }
-      setLoading(false)
     })
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (!mounted) return
+      
       setUser(session?.user ?? null)
       if (session?.user) {
         await fetchProfile(session.user.id)
@@ -31,11 +48,15 @@ export function useAuth() {
       setLoading(false)
     })
 
-    return () => subscription.unsubscribe()
+    return () => {
+      mounted = false
+      subscription.unsubscribe()
+    }
   }, [])
 
   const fetchProfile = async (userId: string) => {
     try {
+      setError(null)
       const { data, error } = await supabase
         .from('users')
         .select('*')
@@ -44,12 +65,14 @@ export function useAuth() {
       
       if (error) {
         console.error('Error fetching profile:', error)
+        setError('Failed to fetch profile')
         return
       }
       
       setProfile(data)
     } catch (error) {
       console.error('Error fetching profile:', error)
+      setError('Failed to fetch profile')
     }
   }
 

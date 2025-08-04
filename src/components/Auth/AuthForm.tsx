@@ -38,18 +38,29 @@ export function AuthForm() {
 
     try {
       if (isSignUp) {
-        const { error } = await signUp(formData.email, formData.password, {
+        const { data, error } = await signUp(formData.email, formData.password, {
           full_name: formData.full_name,
           department: formData.department,
           year_of_study: formData.year_of_study,
         })
-        if (error) throw error
+        if (error) {
+          console.error('Signup error:', error)
+          throw error
+        }
+        if (data?.user && !data.session) {
+          setError('Please check your email to confirm your account')
+          return
+        }
       } else {
-        const { error } = await signIn(formData.email, formData.password)
-        if (error) throw error
+        const { data, error } = await signIn(formData.email, formData.password)
+        if (error) {
+          console.error('Signin error:', error)
+          throw error
+        }
       }
     } catch (err: any) {
-      setError(err.message || 'An error occurred')
+      console.error('Auth error:', err)
+      setError(err.message || 'Authentication failed. Please try again.')
     } finally {
       setLoading(false)
     }

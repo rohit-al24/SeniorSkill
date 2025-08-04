@@ -10,7 +10,7 @@ import { UserProfile } from './components/Profile/UserProfile'
 import { LearningCommunity } from './components/Community/LearningCommunity'
 
 function AppContent() {
-  const { user, profile, loading } = useAuthContext()
+  const { user, profile, loading, error } = useAuthContext()
   const [activeView, setActiveView] = useState('dashboard')
 
   if (loading) {
@@ -20,7 +20,30 @@ function AppContent() {
           <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-2xl flex items-center justify-center mb-4 mx-auto animate-pulse">
             <div className="w-8 h-8 bg-white rounded-lg" />
           </div>
-          <p className="text-gray-600">Loading...</p>
+          <p className="text-gray-600 mb-4">Loading your account...</p>
+          <div className="w-32 h-2 bg-gray-200 rounded-full mx-auto overflow-hidden">
+            <div className="h-full bg-gradient-to-r from-purple-500 to-blue-500 rounded-full animate-pulse"></div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-100 via-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto p-6">
+          <div className="w-16 h-16 bg-red-500 rounded-2xl flex items-center justify-center mb-4 mx-auto">
+            <div className="w-8 h-8 bg-white rounded-lg" />
+          </div>
+          <h2 className="text-xl font-bold text-gray-900 mb-2">Connection Error</h2>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="bg-purple-500 text-white px-6 py-2 rounded-xl hover:bg-purple-600 transition-colors"
+          >
+            Retry
+          </button>
         </div>
       </div>
     )
